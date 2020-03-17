@@ -1,0 +1,7 @@
+---
+# handlers file for jenkinsWithPlugins
+
+- name: Reload-jenkins
+  service:
+    name: jenkins
+    state: restarted

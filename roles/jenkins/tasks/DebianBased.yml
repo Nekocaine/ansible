@@ -1,0 +1,12 @@
+---
+- name : get jenkins apt key on Debian based
+  apt_key :
+    url : https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state : present
+
+- name: add entry on Debian based
+  shell: echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list
+
+- name : update on Debian based
+  apt: 
+    update_cache: yes

@@ -1,0 +1,17 @@
+---
+# tasks file for jenkins
+
+- name : installing jenkinks on debian based OS
+  include: DebianBased.yml
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name : installing jenkinks on CentOS
+  include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+
+- name : install jenkins
+  package:
+    name: jenkins
+    state: present
+  notify: 
+    - Start-jenkins
