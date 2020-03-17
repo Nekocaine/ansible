@@ -1,2 +1,2 @@
-My ansible playbooks and roles
+Ansible playbooks and roles
 ===================
