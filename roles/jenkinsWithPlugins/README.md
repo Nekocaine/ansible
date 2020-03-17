@@ -33,5 +33,5 @@ BSD
 Author Information
 ------------------
 
-Username : Nekocaine
+Username : Nekocaine\
 E-mail : nekocaine@gmail.com
