@@ -1,2 +1,9 @@
 ---
 # vars file for jenkinsWithPlugins
+jenkins_network_config_file_path: /etc/default/jenkins
+JAVA_OPTIONS: "-Djava.awt.headless=true -Dhudson.model.DirectoryBrowserSupport.CSP='sandbox allow-forms allow-scripts allow-same-origin allow-top-navigation'"
+JENKINS_PORT: -1 
+JENKINS_HTTPS_PORT: 8443
+JENKINS_HTTPS_KEYSTORE: "/keystore/jenkins_keystore.jks"
+JENKINS_HTTPS_KEYSTORE_PASSWORD: "password"
+JENKINS_LISTEN_ADDR: ""

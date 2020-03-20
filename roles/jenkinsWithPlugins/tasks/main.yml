@@ -1,6 +1,22 @@
 ---
 # tasks file for jenkinsWithPlugins
 
+- name: Include jenkins path as variable for the different OS
+  include_vars: "{{ item }}"
+  with_first_found :
+    - "{{ ansible_distribution}}.yml"
+    - main.yml
+
+- name: create keystore dir
+  file: 
+    path: /keystore
+    state: directory
+
+- name: UL keystore
+  copy:
+    src: jenkins_keystore.jks
+    dest: /keystore/
+
 - name: Wait for handler
   meta: flush_handlers
 
@@ -11,20 +27,20 @@
 
 - name: Get jenkins cli
   command: wget -O jenkins-cli.jar http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
-  retries: 3
+  retries: 2
   delay: 20
   register: result
   until: result.rc == 0
 
-- name: get firs acces token
-  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
-  register: token
-
-- name: display token
-  debug:
-    var: token.stdout_lines
-
 - name: Install jenkins plugins
   shell : java -jar ./jenkins-cli.jar -s http://127.0.0.1:8080 -auth admin:`cat /var/lib/jenkins/secrets/initialAdminPassword` install-plugin windows-slaves script-security workflow-cps-global-lib command-launcher authentication-tokens blueocean-commons bouncycastle-api display-url-api git mailer blueocean-jwt structs token-macro ace-editor docker-commons jquery-detached workflow-step-api durable-task workflow-scm-step scm-api github workflow-api workflow-support htmlpublisher workflow-cps pipeline-input-step docker-workflow pipeline-stage-step workflow-job favorite pipeline-graph-analysis credentials blueocean-rest cloudbees-folder branch-api pubsub-light workflow-basic-steps workflow-multibranch junit blueocean-pipeline-scm-api ssh-credentials plain-credentials jackson2-api credentials-binding pipeline-model-api pipeline-model-extensions apache-httpcomponents-client-4-api variant matrix-auth antisamy-markup-formatter github-api matrix-project jsch blueocean-web git-client git-server jira workflow-durable-task-step jdk-tool pipeline-model-declarative-agent pipeline-model-definition github-branch-source jenkins-design-language blueocean-core-js blueocean-rest-impl blueocean-pipeline-api-impl blueocean-config blueocean-github-pipeline blueocean-git-pipeline pipeline-milestone-step blueocean-jira momentjs mercurial blueocean-autofavorite blueocean-dashboard blueocean-bitbucket-pipeline blueocean-i18n blueocean-events blueocean-display-url sse-gateway blueocean-personalization blueocean handlebars pipeline-stage-tags-metadata pipeline-rest-api pipeline-build-step blueocean-pipeline-editor handy-uri-templates-2-api cloudbees-bitbucket-branch-source workflow-remote-loader workflow-aggregator pipeline-stage-view docker-plugin publish-over active-directory docker-java-api ldap publish-over-ssh bitbucket pipeline-utility-steps trilead-api lockable-resources gogs-webhook slack ssh-slaves
+  # notify:
+  #  - Reload-jenkins
+
+
+- name: change config file
+  template:
+    src: jenkins{{ ansible_distribution }}.j2
+    dest: "{{ jenkins_network_config_file_path }}"
   notify:
     - Reload-jenkins

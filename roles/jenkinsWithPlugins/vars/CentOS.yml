@@ -1,0 +1,3 @@
+---
+# vars file for jenkinsWithPlugins
+jenkins_network_config_file_path: /etc/sysconfig/jenkins

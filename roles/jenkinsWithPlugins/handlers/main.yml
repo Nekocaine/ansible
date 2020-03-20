@@ -5,3 +5,8 @@
   service:
     name: jenkins
     state: restarted
+
+- name: Stop-jenkins
+  service:
+    name: jenkins
+    state: stopped
