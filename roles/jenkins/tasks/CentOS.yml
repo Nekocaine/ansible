@@ -1,4 +1,10 @@
 ---
+
+- name: Turn on service on CentOS
+  package:
+    name: initscripts
+    state: present
+
 - name : get jenkins apt key on CentOS
   get_url :
     url : https://pkg.jenkins.io/redhat-stable/jenkins.repo
