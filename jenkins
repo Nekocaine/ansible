@@ -1,6 +1,0 @@
----
-
-- hosts: docker 
-
-  roles:
-    - jenkinsWithPlugins
