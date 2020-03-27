@@ -1,0 +1,16 @@
+---
+# tasks file for node
+
+- name: install npm & curl
+  package: 
+    name: "{{ item }}"
+    state: present
+  loop:
+    - curl
+    - npm
+
+- name: get n
+  command: npm i -g n
+
+- name: get lastest node version
+  command: n latest

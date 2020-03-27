@@ -1,0 +1,54 @@
+---
+# tasks file for docker
+
+- name: Turn on service on CentOS
+  package:
+    name: initscripts
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install redhat-lsb-core on CentOS
+  package:
+    name: redhat-lsb-core
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: get version on CentOS
+  shell: lsb_release -d | sed 's/[^0-9.]*//g' | sed 's/\..*$//g'
+  register: versionCentos
+  when: ansible_distribution == "CentOS"
+
+- name: get version on Debian based
+  shell: lsb_release -cs
+  register: versionDebian
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name: add repo on ubuntu
+  apt_repository:
+    repo: deb https://nginx.org/packages/{{ ansible_distribution | lower }} {{ versionDebian.stdout }} stable
+    state: present
+    update_cache: no
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name: Add ABF5BD827BD9BF62 apt key from a keyserver
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: ABF5BD827BD9BF62
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+- name: add repo on centos
+  yum_repository:
+    name: nginx
+    baseurl: https://nginx.org/packages/centos/{{ versionCentos.stdout }}/$basearch/
+    description: nginx repo
+    gpgcheck: no
+    enabled: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Install nginx
+  package:
+    update_cache: yes
+    name: nginx
+    state: present
+  notify: 
+    - Start-nginx

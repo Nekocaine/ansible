@@ -1,0 +1,16 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ubuntu
+    image: ubuntu
+  - name: debian
+    image: debian
+  - name: centos
+    image: centos:7
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
